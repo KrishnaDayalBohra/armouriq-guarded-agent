@@ -1,0 +1,21 @@
+{
+  "name": "armoriq-guarded-agent",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:dashboard": "npm run dev --workspace=dashboard",
+    "dev:agent": "npm run dev --workspace=agent-api",
+    "dev:mcp": "npm run dev --workspace=custom-mcp-server"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.9.0",
+    "axios": "^1.18.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.21.0",
+    "prisma": "^6.9.0",
+    "tailwind-merge": "^3.6.0"
+  }
+}

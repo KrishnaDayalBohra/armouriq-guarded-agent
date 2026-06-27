@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Conversation {
+  id        String            @id @default(cuid())
+  createdAt DateTime          @default(now())
+  messages  Message[]
+  approvals ApprovalRequest[]
+  logs      ToolExecutionLog[]
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  role           String
+  content        String
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model Policy {
+  id         String   @id @default(cuid())
+  name       String
+  type       String
+  toolName   String?
+  serverId   String?
+  configJson String
+  enabled    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ApprovalRequest {
+  id             String   @id @default(cuid())
+  conversationId String
+  messageId      String?
+  toolName       String
+  serverId       String
+  argsJson       String
+  status         String   @default("pending")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  conversation Conversation     @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  logs         ToolExecutionLog[]
+}
+
+model ToolExecutionLog {
+  id                String   @id @default(cuid())
+  conversationId    String
+  messageId         String?
+  toolName          String
+  serverId          String
+  argsJson          String
+  decision          String
+  reason            String?
+  resultJson        String?
+  error             String?
+  approvalRequestId String?
+  createdAt         DateTime @default(now())
+
+  conversation    Conversation     @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  approvalRequest ApprovalRequest? @relation(fields: [approvalRequestId], references: [id])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
