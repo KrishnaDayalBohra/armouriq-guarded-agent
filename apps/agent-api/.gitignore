@@ -5,3 +5,8 @@ dist/
 .env.local
 .env.*
 !.env.example
+node_modules/
+.next/
+dist/
+.env
+.env.*
